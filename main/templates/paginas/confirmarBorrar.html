@@ -1,0 +1,123 @@
+
+{% extends 'paginas/layout.html' %}
+
+
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand hello-msg" href="#"> <span >Hola,{{request.user}}</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class=" collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class=" navbar-nav me-auto mb-2 mb-lg-0  ">
+        <li  class="nav-item">
+          <a class="nav-link " aria-current="page" href="{%  url 'main:index'  %}">HOME</a>
+        </li>
+        <li  class="nav-item">
+          <div style="width:100%;" class="dropdown">
+              <a type="button" class="nav-link dropdown-toggle" data-toggle="dropdown">
+              CATEGORIAS
+              </a>
+              <div class="dropdown-menu">
+                {% for categoria in  lista_categorias %}
+                <a class="dropdown-item" href="{% url 'main:filtro_categorias' categoria.id%}">{{ categoria }}</a>
+                {% endfor %}
+
+              
+              </div>
+          </div>
+      </li>
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> -->
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:AcercaDe'  %}" tabindex="-1" aria-disabled="true">ACERCA DE</a>
+        </li>
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:Contacto'  %}" tabindex="-1" aria-disabled="true">CONTACTO</a>
+        </li>
+        {% if request.user.is_staff %}
+        <li  class="nav-item">
+          <a class="nav-link " href="{%  url 'main:nuevoProducto'  %}" tabindex="-1" aria-disabled="true">NUEVO PRODUCTO</a>
+        </li>
+        {% endif %}
+
+      
+        {% if user.is_authenticated %}
+
+        <li class="logout-menu nav-item">
+          <span id="user-name" class="hello-msg">Hola,{{request.user}}</span>
+          <span class="hello-msg"><a class="nav-link " aria-current="page" href="{% url 'main:logout' %}">Logout</a> </span>
+        </li>
+        {% else %}
+        <li class=" logout-menu nav-item">
+          <a class="nav-link " aria-current="page" href="{% url 'main:Paginalogin' %}">Login</a>
+        </li>
+        <li class=" logout-menu nav-item">
+          <a class="nav-link" href="{% url 'main:registro' %}">Registro</a>
+        </li>
+        {% endif %}
+
+        <li>
+
+          
+        </li>
+
+     
+
+
+      </ul>
+      
+      <form class=" d-flex" method="get" action= "{% url 'main:filtro_por_palabra' %}">
+        {% csrf_token  %}
+        <!-- <input class="form-control me-2" type="search" placeholder="BUSCAR" aria-label="Search" name="q">
+        <button class="btn btn-primary" type="submit">BUSCAR</button> -->
+        <div class="input-group mb-3">
+          <input type="text" class="form-control mr-sm-2" placeholder="Buscar" aria-label="Recipient's username" aria-describedby="basic-addon2" name="q">
+          
+            <button class="btn btn-primary my-2 my-sm-0" type="button">Buscar</button>
+         
+        </div>
+        
+      </form>
+
+   
+      
+    </div>
+  </div>
+</nav>
+
+      
+<div style="margin-bottom:20px;"  class="container">
+  <div>
+<p>Estas seguro que queres eliminar "{{item}}"</p>
+</div>
+
+<div class="d-flex justify-content-around w-75">
+  
+<a href="{% url 'main:index' %}"><button class="btn btn-primary"> Cancelar</button></a>
+
+        
+<form action=""method="POST">
+        {% csrf_token  %}
+       
+       
+        
+        <a href="{% url 'main:borrarProducto' item.id %}"> <input  class="btn btn-primary" type="submit" name="Confirmar" value="Borrar"> </a>
+       
+
+</form>
+</div>
+</div>
+{% endblock content %}

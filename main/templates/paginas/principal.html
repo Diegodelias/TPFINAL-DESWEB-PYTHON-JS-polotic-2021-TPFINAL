@@ -1,0 +1,206 @@
+{% extends 'paginas/layout.html' %}
+
+
+
+{% block content %}
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand hello-msg" href="#"> <span >Hola,{{request.user}}</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class=" collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class=" navbar-nav me-auto mb-2 mb-lg-0  ">
+        <li  class="nav-item">
+          <a class="nav-link " aria-current="page" href="{%  url 'main:index'  %}">HOME</a>
+        </li>
+        <li  class="nav-item">
+          <div style="width:100%;" class="dropdown">
+              <a type="button" class="nav-link dropdown-toggle" data-toggle="dropdown">
+              CATEGORIAS
+              </a>
+              <div class="dropdown-menu">
+                {% for categoria in  lista_categorias %}
+                <a class="dropdown-item" href="{% url 'main:filtro_categorias' categoria.id%}">{{ categoria }}</a>
+                {% endfor %}
+
+              
+              </div>
+          </div>
+      </li>
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> -->
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:AcercaDe'  %}" tabindex="-1" aria-disabled="true">ACERCA DE</a>
+        </li>
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:Contacto'  %}" tabindex="-1" aria-disabled="true">CONTACTO</a>
+        </li>
+        {% if request.user.is_staff %}
+        <li  class="nav-item">
+          <a class="nav-link " href="{%  url 'main:nuevoProducto'  %}" tabindex="-1" aria-disabled="true">NUEVO PRODUCTO</a>
+        </li>
+        {% endif %}
+
+      
+        {% if user.is_authenticated %}
+
+        <li class="logout-menu nav-item">
+          <span id="user-name" class="hello-msg">Hola,{{request.user}}</span>
+          <span class="hello-msg"><a class="nav-link " aria-current="page" href="{% url 'main:logout' %}">Logout</a> </span>
+        </li>
+        {% else %}
+        <li class=" logout-menu nav-item">
+          <a class="nav-link " aria-current="page" href="{% url 'main:Paginalogin' %}">Login</a>
+        </li>
+        <li class=" logout-menu nav-item">
+          <a class="nav-link" href="{% url 'main:registro' %}">Registro</a>
+        </li>
+        {% endif %}
+
+        <li>
+
+          
+        </li>
+
+     
+
+
+      </ul>
+      
+      <form class=" d-flex" method="get" action= "{% url 'main:filtro_por_palabra' %}">
+        {% csrf_token  %}
+        <!-- <input class="form-control me-2" type="search" placeholder="BUSCAR" aria-label="Search" name="q">
+        <button class="btn btn-primary" type="submit">BUSCAR</button> -->
+        <div class="input-group mb-3">
+          <input type="text" class="form-control mr-sm-2" placeholder="Buscar" aria-label="Recipient's username" aria-describedby="basic-addon2" name="q">
+          
+            <button class="btn btn-primary my-2 my-sm-0" type="button">Buscar</button>
+         
+        </div>
+        
+      </form>
+
+   
+      
+    </div>
+  </div>
+</nav>
+
+
+<!-- otro nav -->
+
+
+
+<section id="producto" class="producto text-center py-5">
+ 
+ 
+  <div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {{ message.tags}} mb-3" id="msg"  role="alert">
+      {{ message }}
+    </div>
+    
+    {% endfor %}
+  {% endif %}
+ 
+  
+<div class="row mt-3">
+
+
+{% for producto  in productos %}
+   
+
+<div class=" col-xs-12  col-sm-12 col-md-12 col-lg-4 ">
+  <div class="unProducto py-5 ">
+    <img style="width : 200px;" src="{{producto.imagen.url}}" alt="" class="img-fluid" >
+ 
+  <h3>{{ producto.titulo }}</h3>
+  <h1>${{producto.precio}}</h1>
+  <br>
+  {% if request.user.is_staff %}
+  <a href="{% url 'main:actualizarProducto' producto.id %}"><button class="btn btn-primary my-3 ">Ver detalle</button> </a> 
+  {% else  %}
+  <a href="{% url 'main:detalle_producto' producto.id %}" class="btn btn-primary my-3y">Ver detalle</a>
+  
+  {% endif %} 
+   
+</div>
+</div>
+
+ 
+
+
+{% endfor %} 
+</div>
+
+
+</div>
+
+
+</section>
+
+
+<!--  -->
+
+<div class="container">
+<div class="table-responsive col-lg-12">
+<table class="table  table-hover">
+  <thead>
+    <!-- <tr>
+      <th scope="col">Foto producto</th>
+      <th scope="col">Producto</th>
+      <th scope="col">Categoría</th>
+      <th scope="col">Precio</th>
+    </tr> -->
+  </thead>
+  <tbody>
+
+    {% for prod_masviejos  in resto %}
+
+    <tr>
+      <td scope="row"><img  class="img-fluid foto-tabla" width="100px" src="{{prod_masviejos.imagen.url}}" alt=""></td>
+      <td>{{prod_masviejos.titulo}}</td>
+      <td>{{prod_masviejos.descripcion}}</td>
+      <td>${{prod_masviejos.precio}}</td>
+
+      {% if request.user.is_staff %}
+      <td> <a href="{% url 'main:actualizarProducto' prod_masviejos.id %}"><button class="btn btn-outline-primary my-3 ">Ver detalle</button> </a> </td>
+      {% else  %}
+      <td>
+      <a href="{% url 'main:detalle_producto' prod_masviejos.id %}" class="btn btn-outline-primary my-3">Ver detalle</a> </td>
+      
+      {% endif %} 
+     
+    </tr>
+
+    {% endfor %} 
+  </tbody>
+</table>
+
+</div>
+
+
+</div>
+
+
+  
+
+
+<!-- {{sesion_carrito|length }} -->
+
+{% endblock content %}

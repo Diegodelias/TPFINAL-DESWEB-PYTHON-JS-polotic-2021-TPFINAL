@@ -1,0 +1,229 @@
+{% extends 'paginas/layout.html' %}
+
+
+
+{% block content %}
+
+
+<style>
+  body {
+    background: #eee
+}
+
+.ratings i {
+    font-size: 16px;
+    color: red
+}
+
+.strike-text {
+    color: red;
+    text-decoration: line-through
+}
+
+.product-image {
+    width: 70%
+}
+
+.dot {
+    height: 7px;
+    width: 7px;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 3px;
+    background-color: blue;
+    border-radius: 50%;
+    display: inline-block
+}
+
+.spec-1 {
+    color: #938787;
+    font-size: 15px
+}
+
+h5 {
+    font-weight: 400
+}
+
+.para {
+    font-size: 16px
+}
+</style>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand hello-msg" href="#"> <span >Hola,{{request.user}}</span></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class=" collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class=" navbar-nav me-auto mb-2 mb-lg-0  ">
+        <li  class="nav-item">
+          <a class="nav-link " aria-current="page" href="{%  url 'main:index'  %}">HOME</a>
+        </li>
+        <li  class="nav-item">
+          <div style="width:100%;" class="dropdown">
+              <a type="button" class="nav-link dropdown-toggle" data-toggle="dropdown">
+              CATEGORIAS
+              </a>
+              <div class="dropdown-menu">
+                {% for categoria in  lista_Productos %}
+                <a class="dropdown-item" href="{% url 'main:filtro_categorias' categoria.id%}">{{ categoria }}</a>
+                {% endfor %}
+
+              
+              </div>
+          </div>
+      </li>
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li> -->
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:AcercaDe'  %}" tabindex="-1" aria-disabled="true">ACERCA DE</a>
+        </li>
+        <li class="nav-item">
+          <a style="width:100%;" class="nav-link " href="{%  url 'main:Contacto'  %}" tabindex="-1" aria-disabled="true">CONTACTO</a>
+        </li>
+        {% if request.user.is_staff %}
+        <li  class="nav-item">
+          <a class="nav-link " href="{%  url 'main:nuevoProducto'  %}" tabindex="-1" aria-disabled="true">NUEVO PRODUCTO</a>
+        </li>
+        {% endif %}
+
+      
+        {% if user.is_authenticated %}
+
+        <li class="logout-menu nav-item">
+          <span id="user-name" class="hello-msg">Hola,{{request.user}}</span>
+          <span class="hello-msg"><a class="nav-link " aria-current="page" href="{% url 'main:logout' %}">Logout</a> </span>
+        </li>
+        {% else %}
+        <li class=" logout-menu nav-item">
+          <a class="nav-link " aria-current="page" href="{% url 'main:Paginalogin' %}">Login</a>
+        </li>
+        <li class=" logout-menu nav-item">
+          <a class="nav-link" href="{% url 'main:registro' %}">Registro</a>
+        </li>
+        {% endif %}
+
+        <li>
+
+          
+        </li>
+
+     
+
+
+      </ul>
+      
+      <form class=" d-flex" method="get" action= "{% url 'main:filtro_por_palabra' %}">
+        {% csrf_token  %}
+        <!-- <input class="form-control me-2" type="search" placeholder="BUSCAR" aria-label="Search" name="q">
+        <button class="btn btn-primary" type="submit">BUSCAR</button> -->
+        <div class="input-group mb-3">
+          <input type="text" class="form-control mr-sm-2" placeholder="Buscar" aria-label="Recipient's username" aria-describedby="basic-addon2" name="q">
+          
+            <button class="btn btn-primary my-2 my-sm-0" type="button">Buscar</button>
+         
+        </div>
+        
+      </form>
+
+   
+      
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="row ">
+
+
+
+
+
+
+
+  
+ 
+  
+
+
+<div class="container mt-5 mb-5">
+  <div class="d-flex justify-content-center row">
+   
+      <div class="col-md-10">
+        {% for producto  in productosfiltro  %}
+          <div class=" tarjeta-busqueda row p-2 bg-white border rounded">
+              <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="{{producto.imagen.url}}"></div>
+              <div class="col-md-6 mt-1">
+                  <h5>{{producto.titulo}}</h5>
+                 
+                  <!-- <div class="mt-1 mb-1 spec-1"><span>100% cotton</span><span class="dot"></span><span>Light weight</span><span class="dot"></span><span>Best finish<br></span></div>
+                  <div class="mt-1 mb-1 spec-1"><span>Unique design</span><span class="dot"></span><span>For men</span><span class="dot"></span><span>Casual<br></span></div> -->
+                  <p class="text-justify text-truncate para mb-0">{{ producto.descripcion}}<br><br></p>
+              </div>
+              <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                  <div class="d-flex flex-row align-items-center">
+                     
+                  </div>
+                  <h4 class="mr-1">${{ producto.precio}}</h4>
+                  <h6 class="text-success">Envio gratis</h6>
+                  <div class="d-flex flex-column mt-4 ">
+                    {% if request.user.is_staff %}
+                    <a href="{% url 'main:actualizarProducto' producto.id %}">
+                    <button style="width:80% ;"  class="btn btn-primary btn-sm" type="button">Ver detalles</button>
+                  </a>
+
+                    {% else %}
+                    <a href="{% url 'main:detalle_producto'  producto.id %}">
+                    <button style="width:80% ;" class="btn btn-primary btn-sm" type="button">Ver detalles</button>
+                    </a>
+                    
+                    {% endif %} 
+                    
+                    {% if request.user.is_staff %}
+                    <a href="{% url 'main:actualizarProducto' producto.id %}">
+                    <button style="width:80% ;" class="btn btn-outline-primary btn-sm mt-2" type="button">Agregar al carrito</button>
+                  </a>
+
+                    {% else %}
+
+                    <a  href="{% url 'main:cargarCarrito' producto.id %}"><button style="width:80% ;"class="btn btn-outline-primary btn-sm mt-2" type="button">Agregar al carrito</button></a>
+                    
+                    </div>
+
+                    {% endif %}
+                    
+                    </div>
+              </div>
+              {% empty %}
+              <p>No se encontraron resultados</p>
+              {% endfor %}
+        
+          </div>
+      
+        
+        
+      </div>
+    
+      
+  </div>
+</div>
+
+
+
+
+
+<!-- {{sesion_carrito|length }} -->
+
+{% endblock content %}

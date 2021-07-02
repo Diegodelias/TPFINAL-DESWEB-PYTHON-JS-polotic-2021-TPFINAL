@@ -1,0 +1,57 @@
+{% load static %}
+
+
+<style>
+  .hello-msg{
+    font-size: 19px;
+    color: #fff;
+    margin-right: 20px;
+  }
+  .bg-dark {
+    background-color: #414042 !important;
+  }
+  
+  .nav-item{
+    display:flex;
+    align-items: center;
+  }
+
+</style>
+{% load user_tags %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'main:index' %}">JAGUARETE KAA S.A</a>
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button> -->
+      <!-- <div class="collapse navbar-collapse " id="navbarSupportedContent"> -->
+      <div>
+        <ul style="display:flex;"class="navbar-nav ms-auto mb-2 mb-lg-0 ">
+          {% if user.is_authenticated %}
+
+          <li class="nombreLogout nav-item">
+            <span class="hello-msg">Hola,{{request.user}}</span>
+            <span  class="hello-msg"><a class="nav-link " aria-current="page" href="{% url 'main:logout' %}">Logout</a> </span>
+          </li>
+          {% else %}
+          <li class="nombreLogout nav-item">
+            <a class="nav-link " aria-current="page" href="{% url 'main:Paginalogin' %}">Login</a>
+          </li>
+          <li class="nombreLogout nav-item">
+            <a class="nav-link" href="{% url 'main:registro' %}">Registro</a>
+          </li>
+          {% endif %}
+       
+          {% if request.user|has_group:"usuario-comun" %}
+          <li class="icono-carrito nav-item">
+            <a class="nav-link " href="{% url 'main:carrito' %}" tabindex="-1" aria-disabled="true">
+              <img style="color:#fff;" id="cart-icon" src="{% static 'images/carrito.png' %}" alt="">
+            </a>
+            <p id="cart-total">{{request.session.sesion_carrito |length}}</p>
+          </li>
+          {% endif %}
+        </ul>
+       
+      </div>
+    </div>
+  </nav>
