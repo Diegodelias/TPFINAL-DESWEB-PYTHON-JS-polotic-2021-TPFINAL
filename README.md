@@ -1,6 +1,8 @@
 # TPFINAL-DESWEB-PYTHON-JS-polotic-2021-TPFINAL
 TRABAJO INTEGRADOR FINAL 2021 CURSO DE DESARROLLO WEB FULL STACK CON PYTHON Y JAVASCRIPT POLOTIC USANDO FRAMEWORK DJANGO
 
+https://www.youtube.com/watch?v=KglWX2Kd5Bc
+
 ![](static/images/fotos/1.jpg)
 ![](static/images/fotos/2.jpg)
 ![](static/images/fotos/3.jpg)
